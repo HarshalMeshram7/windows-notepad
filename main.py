@@ -59,6 +59,46 @@ def save_file():
         save_as()
 
 
+#Edit menu functions
+
+def cut_text():
+    text_area.event_generate("<<Cut>>")
+
+def copy_text():
+    text_area.event_generate("<<Copy>>")
+
+def paste_text():
+    text_area.event_generate("<<Paste>>")
+
+def delete_text():
+    text_area.delete("sel.first", "sel.last")
+
+def selectall_text():
+    text_area.tag_add("sel", "1.0", "end")
+
+#Find function
+def find_text():
+    find_window = Toplevel(root)
+    find_window.title("Find")
+    find_window.geometry("250x50")
+    find_window.transient(root)
+    find_window.resizable(False, False)
+
+    find_box = Label(find_window, text="Find : ", font="Arial 10 bold")
+    find_box.place(x=10, y=20, anchor=W)
+
+    find_entry = Entry(find_window)
+    find_entry.place(x=60, y=10)
+
+    find_next = Button(find_window, text=">")
+    find_next.place(x=220, y=10)
+
+    find_previous = Button(find_window, text="<")
+    find_previous.place(x=200, y=10)
+
+
+
+
 #filemenu buttons
 filemenu = Menu(menu)
 menu.add_cascade(label="File", menu=filemenu)
@@ -73,12 +113,12 @@ filemenu.add_command(label='Exit', command=root.quit)
 #editmenu buttons
 editmenu = Menu(menu)
 menu.add_cascade(label='Edit', menu=editmenu)
-editmenu.add_command(label='Cut')
-editmenu.add_command(label='Copy')
-editmenu.add_command(label='Paste')
-editmenu.add_command(label='Delete')
-editmenu.add_command(label='Find')
-editmenu.add_command(label='Select all')
+editmenu.add_command(label='Cut', command=cut_text)
+editmenu.add_command(label='Copy', command=copy_text)
+editmenu.add_command(label='Paste', command=paste_text)
+editmenu.add_command(label='Delete', command=delete_text)
+editmenu.add_command(label='Find', command=find_text)
+editmenu.add_command(label='Select all',command=selectall_text)
 
 #viewmenu buttons
 viewmenu = Menu(menu)
@@ -93,6 +133,9 @@ scroll_bar.pack(side=RIGHT, fill=Y)
 # Text window
 text_area = Text(root, yscrollcommand=scroll_bar.set)
 text_area.pack(fill=BOTH, expand=True)
+
+
+
 
 # Scrollbar config
 scroll_bar.config(command=text_area.yview)
