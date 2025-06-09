@@ -29,6 +29,16 @@ def process_file(file_path):
     except Exception as e:
         print(f"Error opening file : {e}")
         
+#save as file
+def save_as():
+    file_path = filedialog.asksaveasfilename(filetypes=[("Text File", "*.txt"), ("All Files", "*.*")])
+    if file_path:
+        try:
+            file_content = text_area.get("1.0", END)
+            with open(file_path, "w") as file:
+                file.write(file_content)
+        except Exception as e:
+            print(f"Error saving file : {e}")
 
 #filemenu buttons
 filemenu = Menu(menu)
@@ -36,7 +46,7 @@ menu.add_cascade(label="File", menu=filemenu)
 filemenu.add_command(label='New', command=new_file)
 filemenu.add_command(label='Open', command=open_file_dialog)
 filemenu.add_command(label='Save')
-filemenu.add_command(label='Save as')
+filemenu.add_command(label='Save as', command=save_as)
 filemenu.add_command(label='Print')
 filemenu.add_command(label='Close')
 filemenu.add_separator()
