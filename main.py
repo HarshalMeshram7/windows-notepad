@@ -10,16 +10,22 @@ root.geometry("500x500")
 menu = Menu(root)
 root.config(menu=menu)
 
+#Save file
+current_file_path = None
+
 #Newfile menu function
 def new_file():
     text_area.delete("1.0", "end")
+    global current_file_path
+    current_file_path = None
 
 #open_file
 def open_file_dialog():
-    file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")])
-    if file_path:
-        process_file(file_path)
-   
+    global current_file_path
+    current_file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")])
+    if current_file_path:
+        process_file(current_file_path)
+        
 def process_file(file_path):
     try:
         with open(file_path, "r") as file:
@@ -40,15 +46,27 @@ def save_as():
         except Exception as e:
             print(f"Error saving file : {e}")
 
+#save_file
+def save_file():
+    if current_file_path:
+        try: 
+            file_content = text_area.get("1.0", END)
+            with open(current_file_path, "w") as file:
+                file.write(file_content)
+        except Exception as e:
+            print(f"Error saving file : {e}")
+    else:
+        save_as()
+
+
 #filemenu buttons
 filemenu = Menu(menu)
 menu.add_cascade(label="File", menu=filemenu)
 filemenu.add_command(label='New', command=new_file)
 filemenu.add_command(label='Open', command=open_file_dialog)
-filemenu.add_command(label='Save')
+filemenu.add_command(label='Save', command=save_file)
 filemenu.add_command(label='Save as', command=save_as)
 filemenu.add_command(label='Print')
-filemenu.add_command(label='Close')
 filemenu.add_separator()
 filemenu.add_command(label='Exit', command=root.quit)
 
