@@ -1,10 +1,21 @@
 from tkinter import *
 from tkinter import filedialog
 from tkinter import font
+import sys
+import os
+
+# Function to locate resources in both .py and .exe
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS  # PyInstaller uses this
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 root = Tk()
 root.title("Harshal's Notepad")
-root.iconbitmap("Notepad_22522.ico")
+icon_path = resource_path("Notepad_22522.ico")
+root.iconbitmap(icon_path)
 root.geometry("500x500")
 
 # Menu Bar
