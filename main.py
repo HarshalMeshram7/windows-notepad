@@ -74,9 +74,10 @@ def selectall_text():
 def find_text():
     find_window = Toplevel(root)
     find_window.title("Find")
-    find_window.geometry("250x50")
+    find_window.geometry("280x90")
     find_window.transient(root)
     find_window.resizable(False, False)
+    current_search_index = "1.0"
 
     def close_window():
         text_area.tag_remove("match", "1.0", END)  # remove highlight on close
@@ -96,12 +97,32 @@ def find_text():
                 idx = end_idx
             text_area.tag_config("match", foreground="red", background="yellow")
 
+    def replace_text():
+        text_area.tag_remove("match", "1.0", END)
+        keyword = find_entry.get()
+        replace_keyword = replace_entry.get()
+        nonlocal current_search_index
+        if keyword:
+            idx = text_area.search(keyword, current_search_index, nocase=1, stopindex=END)
+            if idx:
+                end_idx = f"{idx}+{len(keyword)}c"
+                text_area.delete(idx, end_idx)
+                text_area.insert(idx, replace_keyword)
+                text_area.tag_add("match", idx, end_idx)
+                current_search_index = end_idx
+            else:
+                current_search_index = "1.0"
+
     Label(find_window, text="Find:", font="Arial 10 bold").place(x=10, y=20, anchor=W)
     find_entry = Entry(find_window)
-    find_entry.place(x=60, y=10)
+    find_entry.place(x=80, y=10)
 
-    Button(find_window, text=">", command=search).place(x=220, y=10)
-    Button(find_window, text="<").place(x=200, y=10)
+    Label(find_window, text="Replace:", font="Arial 10 bold").place(x=10, y=60, anchor=W)
+    replace_entry = Entry(find_window)
+    replace_entry.place(x=80, y=50)
+
+    Button(find_window, text=">", command=search).place(x=240, y=10)
+    Button(find_window, text="<", command=replace_text).place(x=220, y=10)
 
     find_window.protocol("WM_DELETE_WINDOW", close_window)
 
