@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import filedialog
+from tkinter import font
 
 root = Tk()
 root.title("Harshal's Notepad")
@@ -126,6 +127,18 @@ def find_text():
 
     find_window.protocol("WM_DELETE_WINDOW", close_window)
 
+font_size = 9
+
+def zoom_in():
+    global font_size
+    font_size += 2
+    text_font.configure(size=font_size)
+
+def zoom_out():
+    global font_size
+    font_size -= 2
+    text_font.configure(size=font_size)
+
 # File menu
 filemenu = Menu(menu)
 menu.add_cascade(label="File", menu=filemenu)
@@ -150,14 +163,19 @@ editmenu.add_command(label='Select all', command=selectall_text)
 # View menu
 viewmenu = Menu(menu)
 menu.add_cascade(label='View', menu=viewmenu)
-viewmenu.add_command(label='Zoom in')
-viewmenu.add_command(label='Zoom out')
+viewmenu.add_command(label='Zoom in', command=zoom_in)
+viewmenu.add_command(label='Zoom out', command=zoom_out)
 
 # Scrollbar and Text area
 scroll_bar = Scrollbar(root)
 scroll_bar.pack(side=RIGHT, fill=Y)
 
-text_area = Text(root, yscrollcommand=scroll_bar.set)
+
+
+text_font = font.Font(root, family="Arial", size=font_size)
+text_area = Text(root, yscrollcommand=scroll_bar.set, font=text_font)
+
+
 text_area.pack(fill=BOTH, expand=True)
 scroll_bar.config(command=text_area.yview)
 
